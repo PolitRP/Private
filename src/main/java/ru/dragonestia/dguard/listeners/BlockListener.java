@@ -303,7 +303,6 @@ public class BlockListener implements Listener {
         Player player = event.getPlayer();
         Block block = event.getBlock();
 
-        // Проверяем, что блок является столом для крафта (BlockCraftingTable)
         if (block instanceof BlockCraftingTable) {
             BlockCraftingTable  blockCraftingTable = (BlockCraftingTable) block;
             CraftingTableInventory craftingTableInventory = new CraftingTableInventory(blockCraftingTable);
@@ -311,14 +310,90 @@ public class BlockListener implements Listener {
             Region region = point.getCacheRegion(player);
 
             if (region != null && region.getRole(player.getName()) == Role.Nobody && !customMethods.canDoAllCondition.check(player)) {
-                if (!region.getFlag(main.getFlags().get("chests"))) { // Замените "crafting" на ваш флаг для столов для крафта
+                if (!region.getFlag(main.getFlags().get("chests"))) {
                     player.sendTip("§cУ вас нет доступа к данному региону");
                     event.setCancelled(true);
                 }
             }
         }
     }
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onCartographyTableOpen(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        Block block = event.getBlock();
 
+        if (block instanceof BlockCartographyTable) {
+            BlockCartographyTable blockCartographyTable = (BlockCartographyTable) block;
+            CartographyTableInventory cartographyTableInventory = new CartographyTableInventory(blockCartographyTable);
+            Point point = new Point(block);
+            Region region = point.getCacheRegion(player);
 
+            if (region != null && region.getRole(player.getName()) == Role.Nobody && !customMethods.canDoAllCondition.check(player)) {
+                if (!region.getFlag(main.getFlags().get("chests"))) {
+                    player.sendTip("§cУ вас нет доступа к данному региону");
+                    event.setCancelled(true);
+                }
+            }
+        }
+    }
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onSmithingTableOpen(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        Block block = event.getBlock();
+
+        if (block instanceof BlockSmithingTable) {
+            BlockSmithingTable blockSmithingTable = (BlockSmithingTable) block;
+            SmithingInventory smithingInventory = new SmithingInventory(blockSmithingTable);
+            Point point = new Point(block);
+            Region region = point.getCacheRegion(player);
+
+            if (region != null && region.getRole(player.getName()) == Role.Nobody && !customMethods.canDoAllCondition.check(player)) {
+                if (!region.getFlag(main.getFlags().get("chests"))) {
+                    player.sendTip("§cУ вас нет доступа к данному региону");
+                    event.setCancelled(true);
+                }
+            }
+        }
+    }
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onAnvilTableOpen(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        Block block = event.getBlock();
+
+        if (block instanceof BlockAnvil) {
+            BlockAnvil blockAnvil = (BlockAnvil) block;
+            AnvilInventory anvilInventory = new AnvilInventory(blockAnvil);
+            Point point = new Point(block);
+            Region region = point.getCacheRegion(player);
+
+            if (region != null && region.getRole(player.getName()) == Role.Nobody && !customMethods.canDoAllCondition.check(player)) {
+                if (!region.getFlag(main.getFlags().get("chests"))) {
+                    player.sendTip("§cУ вас нет доступа к данному региону");
+                    event.setCancelled(true);
+                }
+            }
+        }
+    }
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onBrewingStandOpen(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        Block block = event.getBlock();
+        BlockEntity blockEntity = block.getLevel().getBlockEntity(block);
+
+        if (blockEntity instanceof BlockEntityBrewingStand) {
+            BlockEntityBrewingStand brewingStandBlockEntity = (BlockEntityBrewingStand) blockEntity;
+            BrewingInventory brewingInventory = new BrewingInventory(brewingStandBlockEntity);
+            Point point = new Point(event.getBlock());
+            Region region = point.getCacheRegion(player);
+
+            if (region != null && region.getRole(player.getName()) == Role.Nobody && !customMethods.canDoAllCondition.check(player)) {
+                if (!region.getFlag(main.getFlags().get("chests"))) {
+                    player.sendTip("§cУ вас нет доступа к данному региону");
+                    event.setCancelled(true);
+
+                }
+            }
+        }
+    }
 }
 
