@@ -173,6 +173,20 @@ public class BlockListener implements Listener {
                 return;
             }
         }
+        if (clickedBlock instanceof BlockLoom) {
+            Point point = new Point(clickedBlock);
+            Region region = point.getCacheRegion(player);
+
+            if (region == null) {
+                return;
+            }
+
+            if (region.getRole(player.getName()).getId() < Role.Member.getId() && !customMethods.canDoAllCondition.check(player)) {
+                player.sendTip("§cУ вас нет доступа к данному региону");
+                event.setCancelled(true);
+                return;
+            }
+        }
         Point point = new Point(clickedBlock);
         Region region = point.getCacheRegion(player);
         event.setCancelled(checkTap(event, region, chests, "chests") || checkTap(event, region, furnaces, "furnace") || checkTap(event, region, redstone, "redstone"));
@@ -424,13 +438,31 @@ public class BlockListener implements Listener {
             Region region = point.getCacheRegion(player);
 
             if (region != null && region.getRole(player.getName()) == Role.Nobody && !customMethods.canDoAllCondition.check(player)) {
-                if (!region.getFlag(main.getFlags().get("paintings"))) {
+                if (!region.getFlag(main.getFlags().get("chests"))) {
                     player.sendTip("§cУ вас нет доступа к данной картине");
                     event.setCancelled(true);
                 }
             }
         }
     }
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onItemFrameOpen(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        Block block = event.getBlock();
+        BlockEntity blockEntity = block.getLevel().getBlockEntity(block);
 
+        if (blockEntity instanceof BlockEntityItemFrame) {
+            Point point = new Point(event.getBlock());
+            Region region = point.getCacheRegion(player);
+
+            if (region != null && region.getRole(player.getName()) == Role.Nobody && !customMethods.canDoAllCondition.check(player)) {
+                if (!region.getFlag(main.getFlags().get("chests"))) {
+                    player.sendTip("§cУ вас нет доступа к данному региону");
+                    event.setCancelled(true);
+
+                }
+            }
+        }
+    }
 }
 
