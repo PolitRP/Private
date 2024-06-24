@@ -3,6 +3,8 @@ package ru.dragonestia.dguard.listeners;
 import cn.nukkit.Player;
 import cn.nukkit.block.*;
 import cn.nukkit.blockentity.*;
+import cn.nukkit.entity.Entity;
+import cn.nukkit.entity.item.EntityPainting;
 import cn.nukkit.event.Event;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.EventPriority;
@@ -11,10 +13,7 @@ import cn.nukkit.event.block.BlockBreakEvent;
 import cn.nukkit.event.block.BlockBurnEvent;
 import cn.nukkit.event.block.BlockPlaceEvent;
 import cn.nukkit.event.block.DoorToggleEvent;
-import cn.nukkit.event.player.PlayerBedEnterEvent;
-import cn.nukkit.event.player.PlayerBucketEmptyEvent;
-import cn.nukkit.event.player.PlayerBucketFillEvent;
-import cn.nukkit.event.player.PlayerInteractEvent;
+import cn.nukkit.event.player.*;
 import cn.nukkit.inventory.*;
 import cn.nukkit.item.Item;
 import cn.nukkit.math.Vector3;
@@ -395,5 +394,43 @@ public class BlockListener implements Listener {
             }
         }
     }
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onGrindStoneOpen(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        Block block = event.getBlock();
+
+        if (block instanceof BlockGrindstone) {
+            BlockGrindstone blockGrindstone = (BlockGrindstone) block;
+            GrindstoneInventory grindstoneInventory = new GrindstoneInventory(blockGrindstone);
+            Point point = new Point(block);
+            Region region = point.getCacheRegion(player);
+
+            if (region != null && region.getRole(player.getName()) == Role.Nobody && !customMethods.canDoAllCondition.check(player)) {
+                if (!region.getFlag(main.getFlags().get("chests"))) {
+                    player.sendTip("§cУ вас нет доступа к данному региону");
+                    event.setCancelled(true);
+                }
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onPaintingInteract(PlayerInteractEntityEvent event) {
+        Player player = event.getPlayer();
+        Entity entity = event.getEntity();
+
+        if (entity instanceof EntityPainting) {
+            Point point = new Point(entity.getLocation());
+            Region region = point.getCacheRegion(player);
+
+            if (region != null && region.getRole(player.getName()) == Role.Nobody && !customMethods.canDoAllCondition.check(player)) {
+                if (!region.getFlag(main.getFlags().get("paintings"))) {
+                    player.sendTip("§cУ вас нет доступа к данной картине");
+                    event.setCancelled(true);
+                }
+            }
+        }
+    }
+
 }
 
