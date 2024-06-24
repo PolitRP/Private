@@ -284,8 +284,8 @@ public class BlockListener implements Listener {
         BlockEntity blockEntity = block.getLevel().getBlockEntity(block);
 
         if (blockEntity instanceof BlockEntityShulkerBox) {
-            BlockEntityShulkerBox barrelBlockEntity = (BlockEntityShulkerBox) blockEntity;
-            ShulkerBoxInventory shulkerBoxInventory = new ShulkerBoxInventory(barrelBlockEntity);
+            BlockEntityShulkerBox shulkerBoxBlockEntity = (BlockEntityShulkerBox) blockEntity;
+            ShulkerBoxInventory shulkerBoxInventory = new ShulkerBoxInventory(shulkerBoxBlockEntity);
             Point point = new Point(event.getBlock());
             Region region = point.getCacheRegion(player);
 
@@ -298,5 +298,27 @@ public class BlockListener implements Listener {
             }
         }
     }
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onCraftingTableOpen(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        Block block = event.getBlock();
+
+        // Проверяем, что блок является столом для крафта (BlockCraftingTable)
+        if (block instanceof BlockCraftingTable) {
+            BlockCraftingTable  blockCraftingTable = (BlockCraftingTable) block;
+            CraftingTableInventory craftingTableInventory = new CraftingTableInventory(blockCraftingTable);
+            Point point = new Point(block);
+            Region region = point.getCacheRegion(player);
+
+            if (region != null && region.getRole(player.getName()) == Role.Nobody && !customMethods.canDoAllCondition.check(player)) {
+                if (!region.getFlag(main.getFlags().get("chests"))) { // Замените "crafting" на ваш флаг для столов для крафта
+                    player.sendTip("§cУ вас нет доступа к данному региону");
+                    event.setCancelled(true);
+                }
+            }
+        }
+    }
+
+
 }
 
