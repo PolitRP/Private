@@ -2,9 +2,7 @@ package ru.dragonestia.dguard.listeners;
 
 import cn.nukkit.Player;
 import cn.nukkit.block.*;
-import cn.nukkit.blockentity.BlockEntity;
-import cn.nukkit.blockentity.BlockEntityChest;
-import cn.nukkit.blockentity.BlockEntityFurnace;
+import cn.nukkit.blockentity.*;
 import cn.nukkit.event.Event;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.EventPriority;
@@ -17,8 +15,7 @@ import cn.nukkit.event.player.PlayerBedEnterEvent;
 import cn.nukkit.event.player.PlayerBucketEmptyEvent;
 import cn.nukkit.event.player.PlayerBucketFillEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
-import cn.nukkit.inventory.ChestInventory;
-import cn.nukkit.inventory.FurnaceTypeInventory;
+import cn.nukkit.inventory.*;
 import cn.nukkit.item.Item;
 import cn.nukkit.math.Vector3;
 import ru.dragonestia.dguard.DGuard;
@@ -162,7 +159,7 @@ public class BlockListener implements Listener {
                 return;
             }
         }
-        
+
         if (clickedBlock instanceof BlockLoom) {
             Point point = new Point(clickedBlock);
             Region region = point.getCacheRegion(player);
@@ -231,6 +228,69 @@ public class BlockListener implements Listener {
 
             if (region != null && region.getRole(player.getName()) == Role.Nobody && !customMethods.canDoAllCondition.check(player)) {
                 if (!region.getFlag(main.getFlags().get("furnace"))) {
+                    player.sendTip("§cУ вас нет доступа к данному региону");
+                    event.setCancelled(true);
+
+                }
+            }
+        }
+    }
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onBarrelOpen(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        Block block = event.getBlock();
+        BlockEntity blockEntity = block.getLevel().getBlockEntity(block);
+
+        if (blockEntity instanceof BlockEntityBarrel) {
+            BlockEntityBarrel barrelBlockEntity = (BlockEntityBarrel) blockEntity;
+            BarrelInventory barrelInventory = new BarrelInventory(barrelBlockEntity);
+            Point point = new Point(event.getBlock());
+            Region region = point.getCacheRegion(player);
+
+            if (region != null && region.getRole(player.getName()) == Role.Nobody && !customMethods.canDoAllCondition.check(player)) {
+                if (!region.getFlag(main.getFlags().get("chests"))) {
+                    player.sendTip("§cУ вас нет доступа к данному региону");
+                    event.setCancelled(true);
+
+                }
+            }
+        }
+    }
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onEnchantTableOpen(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        Block block = event.getBlock();
+        BlockEntity blockEntity = block.getLevel().getBlockEntity(block);
+
+        if (blockEntity instanceof BlockEntityEnchantTable) {
+            BlockEntityEnchantTable enchantTableBlockEntity = (BlockEntityEnchantTable) blockEntity;
+            EnchantInventory enchantInventory = new EnchantInventory(enchantTableBlockEntity);
+            Point point = new Point(event.getBlock());
+            Region region = point.getCacheRegion(player);
+
+            if (region != null && region.getRole(player.getName()) == Role.Nobody && !customMethods.canDoAllCondition.check(player)) {
+                if (!region.getFlag(main.getFlags().get("chests"))) {
+                    player.sendTip("§cУ вас нет доступа к данному региону");
+                    event.setCancelled(true);
+
+                }
+            }
+        }
+    }
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onShulkerOpen(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        Block block = event.getBlock();
+        BlockEntity blockEntity = block.getLevel().getBlockEntity(block);
+
+        if (blockEntity instanceof BlockEntityShulkerBox) {
+            BlockEntityShulkerBox barrelBlockEntity = (BlockEntityShulkerBox) blockEntity;
+            ShulkerBoxInventory shulkerBoxInventory = new ShulkerBoxInventory(barrelBlockEntity);
+            Point point = new Point(event.getBlock());
+            Region region = point.getCacheRegion(player);
+
+            if (region != null && region.getRole(player.getName()) == Role.Nobody && !customMethods.canDoAllCondition.check(player)) {
+                if (!region.getFlag(main.getFlags().get("chests"))) {
                     player.sendTip("§cУ вас нет доступа к данному региону");
                     event.setCancelled(true);
 
