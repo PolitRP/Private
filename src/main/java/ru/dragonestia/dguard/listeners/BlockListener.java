@@ -437,11 +437,11 @@ public class BlockListener implements Listener {
             Point point = new Point(entity.getLocation());
             Region region = point.getCacheRegion(player);
 
-            if (region != null && region.getRole(player.getName()) == Role.Nobody && !customMethods.canDoAllCondition.check(player)) {
-                if (!region.getFlag(main.getFlags().get("chests"))) {
-                    player.sendTip("§cУ вас нет доступа к данной картине");
-                    event.setCancelled(true);
-                }
+            if (region == null) return;
+
+            if (region.getRole(player.getName()).equals(Role.Nobody) && !customMethods.canDoAllCondition.check(player)) {
+                event.setCancelled(true);
+                player.sendTip("§cУ вас нет доступа к данному региону");
             }
         }
     }
