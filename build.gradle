@@ -15,6 +15,8 @@ repositories {
 dependencies {
     compileOnly files("lib/powernukkitx.jar")
     compileOnly files("lib/FormConstructor.jar")
+    compileOnly files("lib/ScoreboardAPI.jar")
+
     implementation 'com.google.code.gson:gson:2.10.1'
 
     compileOnly "org.projectlombok:lombok:1.18.32"
