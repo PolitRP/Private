@@ -127,15 +127,15 @@ public class BlockListener implements Listener {
         if (!event.getAction().equals(PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK)) return;
 
         Player player = event.getPlayer();
+
         Block clickedBlock = event.getBlock();
+        Point point = new Point(clickedBlock);
+        Region region = point.getCacheRegion(player);
+        Block block = event.getBlock();
+        BlockEntity blockEntity = block.getLevel().getBlockEntity(block);
 
         if (clickedBlock instanceof BlockFenceGate) {
-            Point point = new Point(clickedBlock);
-            Region region = point.getCacheRegion(player);
-
-            if (region == null) {
-                return;
-            }
+            if (region == null) return;
 
             if (region.getRole(player.getName()).getId() < Role.Member.getId() && !customMethods.canDoAllCondition.check(player)) {
                 player.sendTip("§cУ вас нет доступа к данному региону");
@@ -145,12 +145,7 @@ public class BlockListener implements Listener {
         }
 
         if (clickedBlock instanceof BlockTrapdoor) {
-            Point point = new Point(clickedBlock);
-            Region region = point.getCacheRegion(player);
-
-            if (region == null) {
-                return;
-            }
+            if (region == null) return;
 
             if (region.getRole(player.getName()).getId() < Role.Member.getId() && !customMethods.canDoAllCondition.check(player)) {
                 player.sendTip("§cУ вас нет доступа к данному региону");
@@ -160,12 +155,7 @@ public class BlockListener implements Listener {
         }
 
         if (clickedBlock instanceof BlockLoom) {
-            Point point = new Point(clickedBlock);
-            Region region = point.getCacheRegion(player);
-
-            if (region == null) {
-                return;
-            }
+            if (region == null) return;
 
             if (region.getRole(player.getName()).getId() < Role.Member.getId() && !customMethods.canDoAllCondition.check(player)) {
                 player.sendTip("§cУ вас нет доступа к данному региону");
@@ -173,13 +163,8 @@ public class BlockListener implements Listener {
                 return;
             }
         }
-        if (clickedBlock instanceof BlockLoom) {
-            Point point = new Point(clickedBlock);
-            Region region = point.getCacheRegion(player);
-
-            if (region == null) {
-                return;
-            }
+        if (clickedBlock instanceof BlockBarrel) {
+            if (region == null) return;
 
             if (region.getRole(player.getName()).getId() < Role.Member.getId() && !customMethods.canDoAllCondition.check(player)) {
                 player.sendTip("§cУ вас нет доступа к данному региону");
@@ -187,9 +172,15 @@ public class BlockListener implements Listener {
                 return;
             }
         }
-        Point point = new Point(clickedBlock);
-        Region region = point.getCacheRegion(player);
-        event.setCancelled(checkTap(event, region, chests, "chests") || checkTap(event, region, furnaces, "furnace") || checkTap(event, region, redstone, "redstone"));
+        if (blockEntity instanceof BlockEntityChest) {
+            if (region == null) return;
+
+            if (region.getRole(player.getName()).getId() < Role.Member.getId() && !customMethods.canDoAllCondition.check(player)) {
+                    player.sendTip("§cУ вас нет доступа к данному региону");
+                    event.setCancelled(true);
+
+                }
+            }
     }
     @EventHandler(priority = EventPriority.HIGH)
     public void onFlintAndSteelUse(PlayerInteractEvent event) {
@@ -203,27 +194,6 @@ public class BlockListener implements Listener {
             if (region != null && region.getRole(player.getName()) == Role.Nobody && !customMethods.canDoAllCondition.check(player)) {
                 player.sendTip("§cУ вас нет доступа к данному региону");
                 event.setCancelled(true);
-            }
-        }
-    }
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onChestInventoryOpen(PlayerInteractEvent event) {
-        Player player = event.getPlayer();
-        Block block = event.getBlock();
-        BlockEntity blockEntity = block.getLevel().getBlockEntity(block);
-
-        if (blockEntity instanceof BlockEntityChest) {
-            BlockEntityChest chestBlockEntity = (BlockEntityChest) blockEntity;
-            ChestInventory chestInventory = new ChestInventory(chestBlockEntity);
-            Point point = new Point(event.getBlock());
-            Region region = point.getCacheRegion(player);
-
-            if (region != null && region.getRole(player.getName()) == Role.Nobody && !customMethods.canDoAllCondition.check(player)) {
-                if (!region.getFlag(main.getFlags().get("chests"))) {
-                    player.sendTip("§cУ вас нет доступа к данному региону");
-                    event.setCancelled(true);
-
-                }
             }
         }
     }
@@ -248,27 +218,7 @@ public class BlockListener implements Listener {
             }
         }
     }
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onBarrelOpen(PlayerInteractEvent event) {
-        Player player = event.getPlayer();
-        Block block = event.getBlock();
-        BlockEntity blockEntity = block.getLevel().getBlockEntity(block);
 
-        if (blockEntity instanceof BlockEntityBarrel) {
-            BlockEntityBarrel barrelBlockEntity = (BlockEntityBarrel) blockEntity;
-            BarrelInventory barrelInventory = new BarrelInventory(barrelBlockEntity);
-            Point point = new Point(event.getBlock());
-            Region region = point.getCacheRegion(player);
-
-            if (region != null && region.getRole(player.getName()) == Role.Nobody && !customMethods.canDoAllCondition.check(player)) {
-                if (!region.getFlag(main.getFlags().get("chests"))) {
-                    player.sendTip("§cУ вас нет доступа к данному региону");
-                    event.setCancelled(true);
-
-                }
-            }
-        }
-    }
     @EventHandler(priority = EventPriority.HIGH)
     public void onEnchantTableOpen(PlayerInteractEvent event) {
         Player player = event.getPlayer();
