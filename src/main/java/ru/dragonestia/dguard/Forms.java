@@ -359,5 +359,40 @@ public class Forms {
                     region.save(true);
                 }).send(player);
     }
+    public void sendFAQForm(Player player) {
+        SimpleForm form = new SimpleForm("FAQ")
+                .add(new Button("Инструкция по созданию региона", Button.Icon.texture("textures/items/book_enchanted"), (p, b) -> sendCreateRegionGuideForm(player)))
+                .add(new Button("Инструкция по добавлению игрока в регион", Button.Icon.texture("textures/items/name_tag"), (p, b) -> sendAddPlayerGuideForm(player)))
+                .add(new Button("Инструкция по установке флагов", Button.Icon.texture("textures/items/repeater"), (p, b) -> sendFlagSetupGuideForm(player)))
+                .add(new Button("Назад", (p, b) -> sendMainForm(player)));
+    }
+
+    public void sendCreateRegionGuideForm(Player player) {
+        new SimpleForm("Создание региона")
+                .setContent("§l§6Инструкция по созданию региона:§r§f\n" +
+                        " Чтобы создать регион нужно сначала выделить крайние точки, которые будут служить границей региона. Отметить точки можно с помощью команд §b/rg pos1§f и §b/rg pos2§f. " +
+                        "После выделения точек можно создать регион в разделе меню.\n" +
+                        " Регион создается на всю высоту мира, и расчет блоков идет по площади. Можно создать всего 2 региона, каждый из которых может достигать площади до 10000 блоков (например, территория 100x100 блоков).")
+                .add(new Button("Назад", Button.Icon.texture("textures/ui/arrow"), (p, b) -> sendFAQForm(player)))
+                .send(player);
+    }
+
+    public void sendAddPlayerGuideForm(Player player) {
+        new SimpleForm("Добавление игрока")
+                .setContent("§l§6Инструкция по добавлению игрока в регион:§r§f\n" +
+                        " Чтобы добавить игрока в регион, нужно сначала выбрать регион в разделе §eМои регионы§f. Далее выбрать §eДобавить игрока§f, выбрать ник игрока из присутствующего онлайна на сервере и нажать §eОтправить§f. Игрок будет добавлен в регион с ролью §bГость§f. " +
+                        "Игрок должен быть онлайн, иначе он не отобразится в списке игроков.\n" +
+                        " Чтобы изменить роль игрока, нужно выбрать регион, в который добавлен игрок, выбрать раздел §eУправление игроками§f, затем выбрать нужного игрока и изменить его роль. В этом разделе можно назначить роль, выгнать игрока или передать регион другому игроку.")
+                .add(new Button("Назад", Button.Icon.texture("textures/ui/arrow"), (p, b) -> sendFAQForm(player)))
+                .send(player);
+    }
+
+    public void sendFlagSetupGuideForm(Player player) {
+        new SimpleForm("Установка флагов")
+                .setContent("§l§6Инструкция по установке флагов:§r§f\n" +
+                        " Для настройки флагов региона нужно выбрать регион в разделе §eМои регионы§f и выбрать раздел §eФлаги региона§f. Здесь можно установить различные параметры, такие как запрет на разрушение блоков, запрет на взаимодействие с предметами и т.д.")
+                .add(new Button("Назад", Button.Icon.texture("textures/ui/arrow"), (p, b) -> sendFAQForm(player)))
+                .send(player);
+    }
 
 }

@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import lombok.Getter;
 import lombok.SneakyThrows;
+import ru.dragonestia.dguard.commands.FaqCommand;
 import ru.dragonestia.dguard.commands.RegionCommand;
 import ru.dragonestia.dguard.custom.CustomMethods;
 import ru.dragonestia.dguard.listeners.BlockListener;
@@ -52,7 +53,8 @@ public class DGuard extends PluginBase {
     @Override
     public void onEnable() {
         getServer().getCommandMap().register("", new RegionCommand(this));
-
+        getServer().getCommandMap().register("", new RegionCommand(this));
+        this.getServer().getCommandMap().register("dguard", new FaqCommand(this, forms));
         getServer().getPluginManager().registerEvents(new BlockListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
 

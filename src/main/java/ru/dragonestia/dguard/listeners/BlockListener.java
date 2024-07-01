@@ -104,20 +104,6 @@ public class BlockListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGH)
-    public void onBedEnter(PlayerBedEnterEvent event) {
-        Player player = event.getPlayer();
-        Point point = new Point(event.getBed());
-        Region region = point.getCacheRegion(player);
-
-        if (region == null) return;
-
-        if (region.getRole(player.getName()) == Role.Nobody && !customMethods.canDoAllCondition.check(player)) {
-            event.setCancelled(true);
-            player.sendTip("§cУ вас нет доступа к данному региону");
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGH)
     public void onBurn(BlockBurnEvent event){
         event.setCancelled(true);
     }
